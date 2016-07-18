@@ -21,8 +21,12 @@ install:
 	${INSTALL} ms ${DESTDIR}
 	${INSTALL} sample_stats ${DESTDIR}
 
-${MSDIR}/ms.c:
-	curl -o- https://webshare.uchicago.edu/users/rhudson1/Public/ms.folder/ms.tar.gz | tar xz
+${MSDIR}/ms.c: ms.tar.gz
+	tar xzf $^
+
+ms.tar.gz:
+	@echo "Download ms.tar.gz from http://home.uchicago.edu/rhudson1/source/mksamples.html"
+	@exit 1
 
 ${DSFMTDIR}/dSFMT.c:
 	curl -o- http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/${DSFMTDIR}.tar.gz | tar xz
