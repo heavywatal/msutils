@@ -2,7 +2,9 @@ MSDIR := msdir
 DSFMTDIR := dSFMT-src-2.2.3
 DESTDIR := ${HOME}/local/bin
 CFLAGS := -O3
-CPPFLAGS := -fno-strict-aliasing -iquote ${DSFMTDIR}
+CPPFLAGS := -DNDEBUG -fno-strict-aliasing -iquote ${DSFMTDIR}
+CXXFLAGS := -O3 -std=c++14
+LIBSEQUENCE := $(shell brew --prefix 2>/dev/null)
 LDFLAGS  := -lm
 TARGET_ARCH := -m64 -msse -msse2 -msse3 -mfpmath=sse
 INSTALL := install
@@ -46,3 +48,6 @@ ms_rand2: ${MSDIR}/ms.c ${MSDIR}/streec.c ${MSDIR}/rand2.c
 
 ms_rand2t: ${MSDIR}/ms.c ${MSDIR}/streec.c ${MSDIR}/rand2t.c
 	${LINK.c} $^ ${OUTPUT_OPTION}
+
+sample_stats++: sample_stats.cpp
+	${LINK.cpp} $^ -I${LIBSEQUENCE}/include -L${LIBSEQUENCE}/lib -lsequence ${OUTPUT_OPTION}
