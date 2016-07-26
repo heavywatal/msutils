@@ -21,11 +21,9 @@ install:
 	${INSTALL} ms ${DESTDIR}
 	${INSTALL} sample_stats ${DESTDIR}
 
-${MSDIR}/ms.c: ms.tar.gz
-	tar xzf $^
-
-ms.tar.gz:
+${MSDIR}/ms.c:
 	@echo "Download ms.tar.gz from http://home.uchicago.edu/rhudson1/source/mksamples.html"
+	@echo "Expand it here: tar xzf ~/Downloads/ms.tar.gz"
 	@exit 1
 
 ${DSFMTDIR}/dSFMT.c:

@@ -17,7 +17,7 @@ Then,
 ```
 % git clone https://github.com/heavywatal/msutils.git
 % cd msutils/
-% mv ~/Downloads/ms.tar.gz ./
+% tar xzf ~/Downloads/ms.tar.gz
 % make
 % make install DESTDIR=${HOME}/local/bin
 ```
