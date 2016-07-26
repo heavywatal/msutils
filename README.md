@@ -51,7 +51,7 @@ pi_1    S_1     D_1     tH_1    pi_2    S_2     D_2     tH_2    Fst     Kst
 4.510526        12      1.197215        2.963158        2.933333        10      -0.754261       5.9555560.382765        0.236678
 ```
 
-The program is writen in C++ using [libsequence](https://github.com/molpopgen/libsequence).
+The program is written in C++ using [libsequence](https://github.com/molpopgen/libsequence).
 ```
 % brew install homebrew/science/libsequence
 % make sample_stats++
