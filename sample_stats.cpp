@@ -80,7 +80,7 @@ int main() {
         if (sample_sizes.size() > 1) {
             Sequence::SimData data(positions, samples);
             Sequence::FST fst(&data, sample_sizes.size(), sample_sizes.data());
-            std::cout << fst.HSM() << '\t' << fst.HBK();
+            std::cout << '\t' << fst.HSM() << '\t' << fst.HBK();
         }
         std::cout << '\n';
     }
