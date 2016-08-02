@@ -3,7 +3,7 @@ DSFMTDIR := dSFMT-src-2.2.3
 DESTDIR := ${HOME}/local/bin
 CFLAGS := -O3
 CPPFLAGS := -DNDEBUG -fno-strict-aliasing -iquote ${DSFMTDIR}
-CXXFLAGS := -O3 -std=c++14
+CXXFLAGS := -O3 -std=c++11
 LIBSEQUENCE := $(shell brew --prefix 2>/dev/null)
 LDFLAGS  := -lm
 TARGET_ARCH := -m64 -msse -msse2 -msse3 -mfpmath=sse
