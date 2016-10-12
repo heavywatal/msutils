@@ -13,13 +13,13 @@ int main() {
     std::cerr.tie(nullptr);
     std::cout.setf(std::ios::fixed);
     std::cout.precision(6);
-    std::string dev_null;
+    std::string buffer;
     unsigned int nsam, nrep;
-    std::cin >> dev_null >> nsam >> nrep;
-    std::cerr << dev_null << " " << nsam << " " << nrep;
+    std::cin >> buffer >> nsam >> nrep;
+    std::cerr << buffer << " " << nsam << " " << nrep;
     std::vector<unsigned int> sample_sizes{nsam};
-    while (std::cin >> dev_null) {
-        if (dev_null == "-I") {
+    while (std::cin >> buffer) {
+        if (buffer == "-I") {
             unsigned int npop;
             std::cin >> npop;
             std::cerr << " -I " << npop;
@@ -29,7 +29,7 @@ int main() {
                 std::cerr << " " << n_i;
             }
         }
-        if (dev_null == "//") {break;}
+        if (buffer == "//") {break;}
     }
     std::cerr << std::endl;
     std::string line;
@@ -45,14 +45,14 @@ int main() {
         std::cout << "pi\tS\tD\ttH\n";
     }
     for (unsigned int irep=1; irep<=nrep; ++irep) {
-        if (irep > 1000 && (irep % 100 == 0)) {
+        if (nrep >= 10000 && (irep % 1000 == 0)) {
             std::cerr << "\r" << irep << " / " << nrep << std::flush;
         }
         unsigned int segsites;
-        std::cin >> dev_null;
+        std::cin >> buffer;
         std::cin >> segsites;
         std::vector<double> positions(segsites);
-        std::cin >> dev_null;
+        std::cin >> buffer;
         for (unsigned int i=0; i<segsites; ++i) {
             std::cin >> positions[i];
         }
@@ -64,7 +64,7 @@ int main() {
             samples.push_back(line);
         }
         std::cin >> std::ws;
-        std::getline(std::cin, dev_null);
+        std::getline(std::cin, buffer);
         auto begit = samples.begin();
         for (const auto n: sample_sizes) {
             auto endit = begit + n;
@@ -84,6 +84,7 @@ int main() {
         }
         std::cout << '\n';
     }
-    std::cerr << std::endl;
+    std::cout << std::flush;
+    if (nrep >= 10000) std::cerr << std::endl;
     return 0;
 }
