@@ -1,10 +1,9 @@
 # msutils
 
 This is an unofficial installer of the coalescent simulator [ms](http://home.uchicago.edu/rhudson1/source/mksamples.html).
-It builds ``ms`` with
-[dSFMT](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/index.html),
-a new variant of Mersenne Twister (MT),
-instead of the original ``drand48()`` and ``rand()``.
+It builds `ms` with a decent random number generator,
+a variant of Mersenne Twister called [dSFMT](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/index.html),
+instead of the original `drand48()` and `rand()`.
 
 Hudson, R. R. (2002)
 "Generating samples under a Wright-Fisher neutral model of genetic variation"

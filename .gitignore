@@ -1,7 +1,8 @@
-ms
-ms_rand*
-sample_stats
-sample_stats++
-msdir
-._msdir
-dSFMT-src-*
+/dSFMT-src-*
+/ms.tar.gz
+/msdir
+/ms
+/ms_rand*
+/sample_stats
+/sample_stats++
+._*
