@@ -1,4 +1,3 @@
-// -*- mode: c++; coding: utf-8 -*-
 #include <iostream>
 #include <string>
 #include <vector>
