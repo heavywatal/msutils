@@ -16,7 +16,7 @@ int main() {
     unsigned int nsam, nrep;
     std::cin >> buffer >> nsam >> nrep;
     std::cerr << buffer << " " << nsam << " " << nrep;
-    std::vector<unsigned int> sample_sizes{nsam};
+    std::vector<unsigned int> sample_sizes(nsam);
     while (std::cin >> buffer) {
         if (buffer == "-I") {
             unsigned int npop;
@@ -28,12 +28,12 @@ int main() {
                 std::cerr << " " << n_i;
             }
         }
-        if (buffer == "//") {break;}
+        if (buffer == "//") break;
     }
     std::cerr << std::endl;
     std::string line;
-    if (sample_sizes.size() > 1) {
-        for (size_t i=1; i<=sample_sizes.size(); ++i) {
+    if (sample_sizes.size() > 1u) {
+        for (size_t i=1u; i<=sample_sizes.size(); ++i) {
             std::cout << "pi_" << i << '\t'
                       <<  "S_" << i << '\t'
                       <<  "D_" << i << '\t'
@@ -43,8 +43,8 @@ int main() {
     } else {
         std::cout << "pi\tS\tD\ttH\n";
     }
-    for (unsigned int irep=1; irep<=nrep; ++irep) {
-        if (nrep >= 10000 && (irep % 1000 == 0)) {
+    for (unsigned int irep=1u; irep<=nrep; ++irep) {
+        if (nrep >= 10000u && (irep % 1000u == 0u)) {
             std::cerr << "\r" << irep << " / " << nrep << std::flush;
         }
         unsigned int segsites;
@@ -52,13 +52,13 @@ int main() {
         std::cin >> segsites;
         std::vector<double> positions(segsites);
         std::cin >> buffer;
-        for (unsigned int i=0; i<segsites; ++i) {
+        for (unsigned int i=0u; i<segsites; ++i) {
             std::cin >> positions[i];
         }
         std::cin >> std::ws;
         std::vector<std::string> samples;
         samples.reserve(nsam);
-        for (unsigned int i=0; i<nsam; ++i) {
+        for (unsigned int i=0u; i<nsam; ++i) {
             std::getline(std::cin, line);
             samples.push_back(line);
         }
@@ -76,14 +76,14 @@ int main() {
             if (endit != samples.end()) {std::cout << '\t';}
             begit = endit;
         }
-        if (sample_sizes.size() > 1) {
+        if (sample_sizes.size() > 1u) {
             Sequence::SimData data(positions, samples);
-            Sequence::FST fst(&data, sample_sizes.size(), sample_sizes.data());
+            Sequence::FST fst(&data, static_cast<unsigned int>(sample_sizes.size()), sample_sizes.data());
             std::cout << '\t' << fst.HSM() << '\t' << fst.HBK();
         }
         std::cout << '\n';
     }
     std::cout << std::flush;
-    if (nrep >= 10000) std::cerr << std::endl;
+    if (nrep >= 10000u) std::cerr << std::endl;
     return 0;
 }
