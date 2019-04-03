@@ -16,7 +16,7 @@ int main() {
     unsigned int nsam, nrep;
     std::cin >> buffer >> nsam >> nrep;
     std::cerr << buffer << " " << nsam << " " << nrep;
-    std::vector<unsigned int> sample_sizes(nsam);
+    std::vector<unsigned int> sample_sizes{nsam};
     while (std::cin >> buffer) {
         if (buffer == "-I") {
             unsigned int npop;
