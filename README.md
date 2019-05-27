@@ -30,7 +30,7 @@ ms 30 4 -t 3.0 | sample_stats
 
 ### `sample_stats++`
 
-`sample_stats++` processes the output of `ms` and calculates some summary statistics as the original `sample_stats` does. But the output is more simple and can be saved as a pure TSV file.
+`sample_stats++` processes the output of `ms` and calculates some summary statistics as the original `sample_stats` does. But the output is simpler and can be saved as a pure TSV file.
 ```sh
 ms 30 4 -t 3.0 | sample_stats++
 # pi      S       D       tH
@@ -55,4 +55,9 @@ The program is written in C++ using [libsequence](https://github.com/molpopgen/l
 brew install brewsci/bio/libsequence
 make sample_stats++
 cp sample_stats++ /somewhere/in/$PATH
+```
+
+You may need to modify `LIBSEQUENCE` variable if you installed libsequence manually without Homebrew, e.g.,
+```sh
+make LIBSEQUENCE=${HOME}/local sample_stats++
 ```
