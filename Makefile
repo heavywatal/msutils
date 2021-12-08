@@ -1,9 +1,10 @@
 MSDIR := msdir
-DSFMTDIR := dSFMT-src-2.2.3
+DSFMT_VERSION := 2.2.5
+DSFMT_SRC := dSFMT-${DSFMT_VERSION}
 DESTDIR := ${HOME}/local/bin
-CFLAGS := -O3
+CFLAGS := -O3 -Wall
 CPPFLAGS := -DNDEBUG -fno-strict-aliasing
-CXXFLAGS := -O3 -std=c++11
+CXXFLAGS := -O3 -std=c++11 -Wall
 LIBSEQUENCE := $(shell brew --prefix 2>/dev/null)
 LDLIBS := -lm
 TARGET_ARCH := -m64 -msse -msse2 -msse3 -mfpmath=sse
@@ -12,7 +13,7 @@ INSTALL := install
 .DEFAULT_GOAL := all
 .PHONY: all clean install
 
-all: ms ms_rand1 ms_rand2 sample_stats
+all: ms ms_rand1 ms_rand2 sample_stats sample_stats++
 	@:
 
 clean:
@@ -28,11 +29,11 @@ ${MSDIR}/ms.c:
 	@echo "Expand it here: tar xzf ~/Downloads/ms.tar.gz"
 	@exit 1
 
-${DSFMTDIR}/dSFMT.c:
-	curl -o- http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/${DSFMTDIR}.tar.gz | tar xz
+${DSFMT_SRC}/dSFMT.c:
+	curl -L https://github.com/MersenneTwister-Lab/dSFMT/archive/refs/tags/v${DSFMT_VERSION}.tar.gz | tar xz
 
-ms: ${MSDIR}/ms.o ${MSDIR}/streec.o randdSFMT.c ${DSFMTDIR}/dSFMT.c
-	${LINK.c} -I${DSFMTDIR} -DDSFMT_MEXP=19937 -Wno-return-type $^ ${LDLIBS} ${OUTPUT_OPTION}
+ms: ${MSDIR}/ms.o ${MSDIR}/streec.o randdSFMT.c ${DSFMT_SRC}/dSFMT.c
+	${LINK.c} -I${DSFMT_SRC} -DDSFMT_MEXP=19937 -DSFMT_DO_NOT_USE_OLD_NAMES -Wno-return-type $^ ${LDLIBS} ${OUTPUT_OPTION}
 
 sample_stats: ${MSDIR}/sample_stats.o ${MSDIR}/tajd.o
 	${LINK.c} $^ ${LDLIBS} ${OUTPUT_OPTION}
