@@ -13,7 +13,7 @@ INSTALL := install
 .DEFAULT_GOAL := all
 .PHONY: all clean install
 
-all: ms ms_rand1 ms_rand2 sample_stats sample_stats++
+all: ms ms_rand1 ms_rand2 sample_stats sample_stats++ summstats
 	@:
 
 clean:
@@ -50,5 +50,8 @@ ms_rand2: ${MSDIR}/ms.o ${MSDIR}/streec.o ${MSDIR}/rand2.o
 ms_rand2t: ${MSDIR}/ms.o ${MSDIR}/streec.o ${MSDIR}/rand2t.o
 	${LINK.c} $^ ${LDLIBS} ${OUTPUT_OPTION}
 
-sample_stats++: sample_stats.cpp
-	${LINK.cpp} $^ -I${LIBSEQUENCE}/include -L${LIBSEQUENCE}/lib -lsequence ${LDLIBS} ${OUTPUT_OPTION}
+sample_stats++: sample_stats.cpp fst.hpp
+	${LINK.cpp} $< -I${LIBSEQUENCE}/include -L${LIBSEQUENCE}/lib -lsequence ${LDLIBS} ${OUTPUT_OPTION}
+
+summstats: summstats.cpp
+	${LINK.cpp} $< -I${LIBSEQUENCE}/include -L${LIBSEQUENCE}/lib -lsequence ${LDLIBS} ${OUTPUT_OPTION}

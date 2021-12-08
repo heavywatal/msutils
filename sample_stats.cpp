@@ -1,10 +1,11 @@
+#include "fst.hpp"
+
+#include <Sequence/variant_matrix/msformat.hpp>
+#include <Sequence/summstats.hpp>
+
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include <Sequence/SimData.hpp>
-#include <Sequence/PolySIM.hpp>
-#include <Sequence/FST.hpp>
 
 inline std::vector<double>
 read_positions(std::istream& ist) {
@@ -23,6 +24,34 @@ read_positions(std::istream& ist) {
     return positions;
 }
 
+inline std::vector<Sequence::VariantMatrix::value_type>
+read_haplotypes(std::istream& ist, const unsigned nsam, const unsigned segsites) {
+    char c;
+    std::vector<Sequence::VariantMatrix::value_type> data(nsam * segsites);
+    for (size_t i=0u; i<nsam; ++i) {
+        for (size_t j=0u; j<segsites; ++j) {
+            ist >> c;
+            if (c == '1') {
+                data[i + nsam * j] = 1; // row-major to col-major
+            }
+        }
+        ist >> std::ws;
+    }
+    return data;
+}
+
+inline std::vector<Sequence::AlleleCountMatrix>
+read_subpops(std::istream& ist, const std::vector<unsigned>& sample_sizes, const std::vector<double>& positions) {
+    std::vector<Sequence::AlleleCountMatrix> matrices;
+    matrices.reserve(sample_sizes.size());
+    for (const auto nsam: sample_sizes) {
+        matrices.emplace_back(
+            Sequence::VariantMatrix(read_haplotypes(ist, nsam, positions.size()), positions)
+        );
+    }
+    return matrices;
+}
+
 inline std::ostream&
 write_header(std::ostream& ost, const unsigned npop) {
     if (npop > 1u) {
@@ -35,6 +64,29 @@ write_header(std::ostream& ost, const unsigned npop) {
         ost << "Fst\n";
     } else {
         ost << "pi\tS\tD\ttH\n";
+    }
+    return ost;
+}
+
+inline std::ostream&
+write_sample_stats(std::ostream& ost, const Sequence::AlleleCountMatrix& ac) {
+    ost << Sequence::thetapi(ac) << '\t'
+        << Sequence::nvariable_sites(ac) << '\t'
+        << Sequence::tajd(ac) << '\t'
+        << Sequence::thetah(ac, 0);
+    return ost;
+}
+
+inline std::ostream&
+write_sample_stats(std::ostream& ost, const std::vector<Sequence::AlleleCountMatrix>& matrices) {
+    bool is_first = true;
+    for (const auto& ac: matrices) {
+        if (is_first) {
+            is_first = false;
+        } else {
+            ost << '\t';
+        }
+        write_sample_stats(ost, ac);
     }
     return ost;
 }
@@ -79,31 +131,12 @@ int main() {
             std::cerr << "\r" << irep << " / " << ms.nrep << std::flush;
         }
         const auto positions = read_positions(std::cin);
-        std::cin >> std::ws;
-        std::vector<std::string> samples;
-        samples.reserve(ms.nsam);
-        for (unsigned i=0u; i<ms.nsam; ++i) {
-            std::getline(std::cin, buffer);
-            samples.push_back(buffer);
-        }
-        std::cin >> std::ws;
-        std::getline(std::cin, buffer);
-        auto begit = samples.begin();
-        for (const auto n: ms.sample_sizes) {
-            auto endit = begit + n;
-            Sequence::SimData data(positions, {begit, endit});
-            Sequence::PolySIM poly(&data);
-            std::cout << poly.ThetaPi() << '\t'
-                      << poly.NumPoly() << '\t'
-                      << poly.TajimasD() << '\t'
-                      << poly.ThetaH();
-            if (endit != samples.end()) {std::cout << '\t';}
-            begit = endit;
-        }
+        auto matrices = read_subpops(std::cin, ms.sample_sizes, positions);
+        write_sample_stats(std::cout, matrices);
         if (ms.npop() > 1u) {
-            Sequence::SimData data(positions, samples);
-            Sequence::FST fst(&data, static_cast<unsigned>(ms.npop()), ms.sample_sizes.data());
+            wtl::FST fst(std::move(matrices));
             std::cout << '\t' << fst.HSM();
+            // fst.write_debug(std::cout);
         }
         std::cout << '\n';
     }
