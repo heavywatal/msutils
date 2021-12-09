@@ -6,6 +6,7 @@ CFLAGS := -O3 -Wall -Wno-implicit-function-declaration
 CPPFLAGS := -DNDEBUG -fno-strict-aliasing
 CXXFLAGS := -O3 -std=c++11 -Wall
 LIBSEQUENCE := $(shell brew --prefix 2>/dev/null)
+LDFLAGS_LIBSEQ := -L${LIBSEQUENCE}/lib -Wl,-rpath,${LIBSEQUENCE}/lib
 LDLIBS := -lm
 TARGET_ARCH := -m64 -msse -msse2 -msse3 -mfpmath=sse
 INSTALL := install
@@ -58,7 +59,7 @@ ms_rand2t: ${MSDIR}/ms.o ${MSDIR}/streec.o ${MSDIR}/rand2t.o
 	${LINK.c} $^ ${LDLIBS} ${OUTPUT_OPTION}
 
 sample_stats++: sample_stats.cpp fst.hpp
-	${LINK.cpp} $< -I${LIBSEQUENCE}/include -L${LIBSEQUENCE}/lib -lsequence ${LDLIBS} ${OUTPUT_OPTION}
+	${LINK.cpp} $< -I${LIBSEQUENCE}/include ${LDFLAGS_LIBSEQ} -lsequence ${LDLIBS} ${OUTPUT_OPTION}
 
 summstats: summstats.cpp
-	${LINK.cpp} $< -I${LIBSEQUENCE}/include -L${LIBSEQUENCE}/lib -lsequence ${LDLIBS} ${OUTPUT_OPTION}
+	${LINK.cpp} $< -I${LIBSEQUENCE}/include ${LDFLAGS_LIBSEQ} -lsequence ${LDLIBS} ${OUTPUT_OPTION}
