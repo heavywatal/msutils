@@ -2,7 +2,7 @@ MSDIR := msdir
 DSFMT_VERSION := 2.2.5
 DSFMT_SRC := dSFMT-${DSFMT_VERSION}
 DESTDIR := ${HOME}/local/bin
-CFLAGS := -O3 -Wall
+CFLAGS := -O3 -Wall -Wno-implicit-function-declaration
 CPPFLAGS := -DNDEBUG -fno-strict-aliasing
 CXXFLAGS := -O3 -std=c++11 -Wall
 LIBSEQUENCE := $(shell brew --prefix 2>/dev/null)
@@ -30,7 +30,7 @@ ${MSDIR}/ms.c:
 	@exit 1
 
 ${DSFMT_SRC}/dSFMT.c:
-	curl -L https://github.com/MersenneTwister-Lab/dSFMT/archive/refs/tags/v${DSFMT_VERSION}.tar.gz | tar xz
+	curl -L https://github.com/MersenneTwister-Lab/dSFMT/archive/refs/tags/v${DSFMT_VERSION}.tar.gz | tar xzf -
 
 ms: ${MSDIR}/ms.o ${MSDIR}/streec.o randdSFMT.c ${DSFMT_SRC}/dSFMT.c
 	${LINK.c} -I${DSFMT_SRC} -DDSFMT_MEXP=19937 -DSFMT_DO_NOT_USE_OLD_NAMES -Wno-return-type $^ ${LDLIBS} ${OUTPUT_OPTION}
