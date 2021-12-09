@@ -13,16 +13,23 @@ INSTALL := install
 .DEFAULT_GOAL := all
 .PHONY: all clean install
 
-all: ms ms_rand1 ms_rand2 sample_stats sample_stats++ summstats
+all: ms ms_rand1 ms_rand2 sample_stats
 	@:
 
 clean:
-	${RM} ms sample_stats ms_rand*
+	${RM} ms sample_stats ms_rand* msdir/*.o sample_stats++ summstats
 
 install:
 	${INSTALL} -d ${DESTDIR}
 	${INSTALL} ms ${DESTDIR}
 	${INSTALL} sample_stats ${DESTDIR}
+
+libseq: sample_stats++ summstats
+	@:
+
+install-libseq: libseq
+	${INSTALL} sample_stats++ ${DESTDIR}
+	${INSTALL} summstats ${DESTDIR}
 
 ${MSDIR}/ms.c:
 	@echo "Download ms.tar.gz from http://home.uchicago.edu/rhudson1/source/mksamples.html"
